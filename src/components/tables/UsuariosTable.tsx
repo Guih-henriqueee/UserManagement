@@ -116,10 +116,10 @@ export default function UsuariosTable({
                       {usuario.nome[0]}{usuario.sobrenome[0]}
                     </div>
                     <div>
-                      <div className="font-medium text-foreground">
+                      <div className="font-medium text-foreground text-left">
                         {usuario.nome} {usuario.sobrenome}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground text-left">
                         Gerente: {usuario.gerente || 'N/A'}
                       </div>
                     </div>
@@ -128,8 +128,8 @@ export default function UsuariosTable({
                 <TableCell className="font-mono text-sm">
                   {usuario.cpf}
                 </TableCell>
-                <TableCell>{usuario.cargo}</TableCell>
-                <TableCell>{usuario.departamento}</TableCell>
+                <TableCell className='text-left'>{usuario.cargo}</TableCell>
+                <TableCell className='text-left'>{usuario.departamento}</TableCell>
                 <TableCell>
                   <Badge variant={usuario.nivelPermissao >= 8 ? "default" : "secondary"}>
                     Nível {usuario.nivelPermissao}
