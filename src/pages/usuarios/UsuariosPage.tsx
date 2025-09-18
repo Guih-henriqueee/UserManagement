@@ -208,6 +208,7 @@ export default function UsuariosPage() {
         onOpenChange={setShowForm}
         usuario={editingUsuario}
         onSubmit={handleSubmitUser}
+        
       />
     </div>
   );
