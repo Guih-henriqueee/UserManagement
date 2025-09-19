@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-// import UsuariosTable from '@/components/tables/UsuariosTable';
 import UsuarioFormModal from '@/components/forms/UsuarioFormModal';
 import { mockUsuarios } from '@/lib/mock-data';
 import type { Usuario } from '@/types';
@@ -71,30 +70,37 @@ export default function UsuariosPage() {
     setShowForm(true);
   };
 
-
-    const handleSubmitUser = (data: Partial<Usuario>) => {
+  const handleSubmitUser = (data: Partial<Usuario>) => {
     if (editingUsuario) {
-        setUsuarios(prev =>
+      setUsuarios(prev =>
         prev.map(c =>
-            c.id === editingUsuario.id ? { ...c, ...data } : c
+          c.id === editingUsuario.id ? { ...c, ...data } : c
         )
-        );
+      );
     } else {
-        const newUser: Usuario = {
+      const newUser: Usuario = {
         ...data as Omit<Usuario, "id">,
         id: uuidv4(), // gera id único
-        };
-        setUsuarios(prev => [...prev, newUser]);
+      };
+      setUsuarios(prev => [...prev, newUser]);
     }
     setShowForm(false);
-    };
+  };
 
   const handleDeleteUser = (id: string) => {
     setUsuarios(prev => prev.filter(u => u.id !== id));
   };
 
-  const departments = Array.from(new Set(usuarios.map(u => u.departamento)));
-  const statusOptions = Array.from(new Set(usuarios.map(u => u.status)));
+  // 🔹 Agora removendo valores vazios e ordenando
+  const departments = Array.from(
+    new Set(
+      usuarios.map(u => u.departamento).filter(Boolean)
+    )
+  ).sort();
+
+  const uniqueStatus = Array.from(
+    new Set(mockUsuarios.map(u => u.status).filter(Boolean))
+  ).sort();
 
   return (
     <div className="space-y-6">
@@ -189,6 +195,65 @@ export default function UsuariosPage() {
         </Card>
       </div>
 
+      {/* Filters */}
+      <Card className="border-0 bg-gradient-subtle dark:bg-gradient-to-br dark:from-card dark:to-muted/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filtros
+          </CardTitle>
+          <CardDescription className='text-left'>
+            Use os filtros abaixo para encontrar usuários específicos
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-4 md:flex-row md:flex-wrap">
+            {/* Search */}
+            <div className="relative flex-1 min-w-[240px]">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por nome, CPF ou cargo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className='flex grid grid-cols-2 gap-5'>
+              {/* Departamento */}
+              <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                <SelectTrigger className="min-w-[140px] w-full">
+                  <SelectValue placeholder="Departamento" />
+                </SelectTrigger>
+                <SelectContent className='bg-background'>
+                  {departments.map((departamento) => (
+                    <SelectItem key={departamento} value={departamento}>
+                      {departamento}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Status */}
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="min-w-[140px] w-full">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent className='bg-background'>
+
+                  {
+                    uniqueStatus.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))
+                  }
+                </SelectContent>
+              </Select>
+
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Table */}
       <Card className="border-0 bg-gradient-subtle dark:bg-gradient-to-br dark:from-card dark:to-muted/20">
