@@ -10,7 +10,6 @@ import {
   Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import {
   ResponsiveContainer,
@@ -68,7 +67,7 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  const StatCard = ({ title, value, icon: Icon, change, changeType, description }: any) => (
+  const StatCard = ({ title, value, icon: Icon, change,  description }: any) => (
     <Card className="relative overflow-hidden group hover:shadow-brand-lg transition-all duration-300 border-0 bg-gradient-subtle dark:bg-gradient-to-br dark:from-card dark:to-muted/20">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">

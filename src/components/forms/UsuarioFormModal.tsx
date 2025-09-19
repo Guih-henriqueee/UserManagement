@@ -83,7 +83,6 @@ export default function UsuarioFormModal({
   };
 
   const selectedDepartment = form.watch('departamento');
-  const selectedDepartmentData = mockDepartamentos.find(d => d.nome === selectedDepartment);
 
   const potentialManagers = mockUsuarios.filter(
     u => u.nivelPermissao >= 8 && u.status === 'Ativo' && u.id !== usuario?.id
