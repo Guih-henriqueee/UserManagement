@@ -11,7 +11,7 @@ import './App.css';
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="saas-theme">
+    <ThemeProvider defaultTheme="light" storageKey="saas-theme">
       <Router>
         <Layout>
           <Routes>
