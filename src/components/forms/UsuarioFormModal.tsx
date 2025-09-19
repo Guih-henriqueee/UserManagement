@@ -82,7 +82,6 @@ export default function UsuarioFormModal({
     form.reset();
   };
 
-  const selectedDepartment = form.watch('departamento');
 
   const potentialManagers = mockUsuarios.filter(
     u => u.nivelPermissao >= 8 && u.status === 'Ativo' && u.id !== usuario?.id
