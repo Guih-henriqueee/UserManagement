@@ -20,15 +20,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { mockDepartamentos, mockUsuarios } from '@/lib/mock-data';
 import type { Usuario } from '@/types';
+import {SelectField} from '@/components/forms/utils/SelectionComponentStyle';
 
 const usuarioSchema = z.object({
   nome: z.string().min(2),
@@ -57,34 +51,35 @@ export default function UsuarioFormModal({
   usuario,
   onSubmit,
 }: UsuarioFormModalProps) {
+  const defaultValues: UsuarioFormData = {
+    nome: '',
+    sobrenome: '',
+    cpf: '',
+    nivelPermissao: 1,
+    cargo: '',
+    departamento: '',
+    gerente: '',
+    dataNascimento: '',
+    status: 'Ativo',
+  };
+
   const form = useForm<UsuarioFormData>({
     resolver: zodResolver(usuarioSchema),
-    defaultValues: {
-      nome: '',
-      sobrenome: '',
-      cpf: '',
-      nivelPermissao: 1,
-      cargo: '',
-      departamento: '',
-      gerente: '',
-      dataNascimento: '',
-      status: 'Ativo',
-    },
+    defaultValues,
   });
 
   useEffect(() => {
     if (usuario) form.reset(usuario);
-    else form.reset({});
+    else form.reset(defaultValues);
   }, [usuario, form, open]);
 
   const handleSubmit = (data: UsuarioFormData) => {
     onSubmit(data);
-    form.reset();
+    form.reset(defaultValues);
   };
 
-
   const potentialManagers = mockUsuarios.filter(
-    u => u.nivelPermissao >= 8 && u.status === 'Ativo' && u.id !== usuario?.id
+    u =>  u.status === 'Ativo' && u.id !== usuario?.id
   );
 
   return (
@@ -97,8 +92,7 @@ export default function UsuarioFormModal({
           </DialogDescription>
         </DialogHeader>
 
-        {/* Scroll interno */}
-        <div className="overflow-y-auto  max-h-[75vh] pr-3 custom-scrollbar">
+        <div className="overflow-y-auto max-h-[75vh] pr-3 custom-scrollbar">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
 
@@ -168,16 +162,16 @@ export default function UsuarioFormModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Departamento *</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o departamento" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {mockDepartamentos.map(d => (
-                            <SelectItem key={d.id} value={d.nome}>{d.nome}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectField
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={mockDepartamentos.map(d => ({
+                          id: d.id,
+                          label: d.nome,
+                          value: d.nome
+                        }))}
+                        placeholder="Selecione o departamento"
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -201,16 +195,16 @@ export default function UsuarioFormModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gerente</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o gerente" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {potentialManagers.map(u => (
-                            <SelectItem key={u.id} value={u.nome}>{u.nome}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectField
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={potentialManagers.map(u => ({
+                          id: u.id,
+                          label: u.nome,
+                          value: u.nome
+                        }))}
+                        placeholder="Selecione o gerente"
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -239,20 +233,22 @@ export default function UsuarioFormModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status *</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Ativo">Ativo</SelectItem>
-                          <SelectItem value="Inativo">Inativo</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <SelectField
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={[
+                          { id: 1, label: 'Ativo', value: 'Ativo' },
+                          { id: 2, label: 'Inativo', value: 'Inativo' }
+                        ]}
+                        placeholder="Selecione o status"
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+
+              {/* Footer */}
               <DialogFooter className="flex justify-end gap-2 mt-4">
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                   Cancelar
@@ -263,10 +259,8 @@ export default function UsuarioFormModal({
               </DialogFooter>
             </form>
           </Form>
-        
         </div>
       </DialogContent>
-
     </Dialog>
   );
 }
