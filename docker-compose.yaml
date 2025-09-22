@@ -3,9 +3,9 @@ services:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Password!@#
+      POSTGRES_DB: datalake
     ports:
       - "5432:5432"
     volumes:
@@ -23,11 +23,12 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
+      DB_USER: root
+      DB_PASSWORD: Password!@#
+      DB_NAME: datalake
+      HOST: 0.0.0.0
     ports:
-      - "4000:4000"
+      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,3 +45,7 @@ services:
 
 volumes:
   postgres-data:
+
+
+
+
