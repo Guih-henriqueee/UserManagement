@@ -38,10 +38,16 @@ export interface Fornecedor{
     agendamentos: string;
 }
 
-export interface  Employee {
+export interface  Usuario {
     id: string;
-    name: string;
-    document: string;
-    salary: number;
-    manager: string;
+    nome: string;
+    sobrenome: string;
+    cpf: string;
+    nivel_permissao_id: number;
+    cargo_id: number;
+    gerente_id: number;
+    data_nascimento: Date;
+    data_adminissao: Date;
+    status: true | false;
+    departamento_id: number;
 }

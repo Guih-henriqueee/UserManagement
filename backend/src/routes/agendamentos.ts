@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import z, { array, string, ZodNull } from "zod";
+import {z} from "@hono/zod-openapi";
 import { randomUUID } from "node:crypto";
 import fastifyMultipart from "@fastify/multipart";
 import { Agendamento } from '../schema/interfaces'

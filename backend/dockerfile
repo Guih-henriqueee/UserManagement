@@ -1,9 +1,21 @@
 # backend/Dockerfile
 FROM node:20
 
+# Instala pnpm globalmente
+RUN npm install -g pnpm
+
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+
+# Copia apenas os manifests primeiro (para melhor cache das dependências)
+COPY package.json pnpm-lock.yaml* ./
+
+# Instala dependências (sem instalar dev se for produção)
+RUN pnpm install --frozen-lockfile
+
+# Copia o restante do código
 COPY . .
+
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+
+# Usa o script definido no package.json
+CMD ["pnpm", "dev"]

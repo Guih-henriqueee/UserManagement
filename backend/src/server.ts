@@ -3,7 +3,7 @@ import { fastifyCors } from '@fastify/cors';
 import { validatorCompiler, serializerCompiler, ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-import { RouteEmployes} from './routes/routes';
+import { RouteUsuario } from './routes/Employee';
 import { RouteAgendamentos } from './routes/agendamentos';
 import { RouteFornecedores } from './routes/fornecedores';
 import { RouteUsers } from './routes/user';
@@ -22,7 +22,7 @@ app.register(fastifyCors, {
 app.register(fastifySwagger, {
     openapi: {
         info: {
-            title: 'Agendamentos API',
+            title: 'Manager Users',
             description: 'Backend - Painel de Agendamentos',
             version: '0.0.2v beta - Last update 03/04/2025',
             contact: {
@@ -50,7 +50,7 @@ app.register(fastifySwagger, {
 });
 
 app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
+    routePrefix: '/',
     uiConfig: {
       docExpansion: 'full',
       deepLinking: false
@@ -74,13 +74,9 @@ app.register(fastifySwaggerUi, {
 
 app.register(RouteAgendamentos);
 app.register(RouteUsers);
-app.register(RouteEmployes);
+app.register(RouteUsuario );
 app.register(RouteFornecedores);
 
-
-app.get('/', () => {
-    return { hello: 'world' };
-});
 
 
 app.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {

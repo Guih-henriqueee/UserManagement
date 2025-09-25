@@ -1,65 +1,58 @@
-import { FastifyInstance } from "fastify";
-import z, { array, string, ZodNull } from "zod";
-import { randomUUID } from "node:crypto";
-import fastifyMultipart from "@fastify/multipart";
-import { Employee } from '../schema/interfaces'
-import { createDeflate } from "node:zlib";
-import { create } from "node:domain";
-import { GetAuth, validateToken } from '../auth/functionAuth'
-import { appendFile } from "node:fs";
-import { toJSONSchema } from "zod/v4";
+// src/routes/Employee.ts
+import { FastifyInstance } from 'fastify'
+import { z } from 'zod'
+import { randomUUID } from 'node:crypto'
+import { Usuario } from '../schema/interfaces'
 
-// Banco de dados simulado
+// "banco" em memória
+const usuarios: Usuario[] = []
 
+// Schema de entrada
+const UsuarioBodySchema = z.object({
+  nome: z.string().describe('Nome do Usuário'),
+  sobrenome: z.string().describe('Sobrenome do Usuário'),
+  cpf: z.string().describe('CPF do usuário'),
+  nivel_permissao_id: z.number().describe('Identificador de Nível de Permissão'),
+  cargo_id: z.number().describe('Identificador de Cargo'),
+  gerente_id: z.number().describe('Identificador de Gerente'),
+  data_nascimento: z.date().describe('Data de nascimento (YYYY-MM-DD)'),
+  data_adminissao: z.date().describe('Data de admissão (YYYY-MM-DD)'),
+  status: z.boolean().describe('Indica se o usuário está ativo'),
+  departamento_id: z.number().describe('Identificador de Departamento'),
+})
 
-const Employee: Employee[] = [];
+// Schema de resposta
+const UsuarioResponseSchema = z.object({
+  id: z.string().uuid(),
+  nome: z.string(),
+  sobrenome: z.string(),
+  cpf: z.string(),
+})
 
+export async function RouteUsuario(app: FastifyInstance) {
+  app.post(
+    '/usuarios',
+    {
+      schema: {
+        description: 'Criar um novo usuário',
+        tags: ['Usuarios'],
+        body: UsuarioBodySchema,
+        response: {
+          201: UsuarioResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const body = request.body as z.infer<typeof UsuarioBodySchema>
 
+      const newUsuario: Usuario = {
+        ...body,
+        id: randomUUID(),
+      }
 
-export async function RouteEmployee(app: FastifyInstance) {
-    app.post(
-        "/Employee",
-        {
-            schema: {
-                description: "Create a new Employee",
-                tags: ["Employee"],
-                body: z.object({
-                    name: z.string().describe("Nome do empregado"),
-                    document: z.string().regex(/^\d{11}$/).describe("Insira o CPF do empregado"),
-                    salary: z.number().describe("salario do empregado"),
-                    manager: z.string().describe("Insira o CPF do empregado"),
-                }),
-                response: {
-                    201: z.object({
-                        id: z.string(),
-                        name: z.string(),
-                        document: z.string()
-                        
-                        }),
+      usuarios.push(newUsuario)
 
-                    
-                }
-                },
-            },
-        
-        (request, reply) => {
-            const { name, document, salary, manager } = request.body as { name: string, document: string, salary: number, manager: string };
-            
-            const newEmployee: Employee = {
-                id: randomUUID(),
-                name,
-                document,
-                salary,
-                manager
-
-            };
-            Employee.push(newEmployee);
-            
-            
-            
-            
-            return reply.status(201).send(newEmployee);
-
-        }
-    );
+      return reply.status(201).send(newUsuario)
+    }
+  )
 }
