@@ -78,7 +78,7 @@ CREATE TABLE staging.usuarios(
     data_admissao date NOT NULL,
     status boolean NOT NULL DEFAULT true,
     departamento_id integer,
-    PRIMARY KEY(id),
+    PRIMARY KEY(id)
     CONSTRAINT usuarios_nivel_permissao_id_fkey FOREIGN key(nivel_permissao_id) REFERENCES staging.niveis_permissao(id),
     CONSTRAINT usuarios_cargo_id_fkey FOREIGN key(cargo_id) REFERENCES staging.cargos(id),
     CONSTRAINT usuarios_gerente_id_fkey FOREIGN key(gerente_id) REFERENCES staging.usuarios(id),

@@ -47,7 +47,7 @@ export interface  Usuario {
     cargo_id: number;
     gerente_id: number;
     data_nascimento: Date;
-    data_adminissao: Date;
+    data_admissao: Date;
     status: true | false;
     departamento_id: number;
 }

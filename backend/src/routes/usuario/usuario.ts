@@ -7,6 +7,7 @@ import {
 usuarioBodySchema, 
 usuarioResponseSchemaPOST,
 usuarios } from './usuarioSchema'
+import { postUsuario } from './usuarioToDB/usuarioInsertToDB';
 
 
 export async function RouteUsuario(app: FastifyInstance) {
@@ -24,12 +25,12 @@ export async function RouteUsuario(app: FastifyInstance) {
     },
     async (request, reply) => {
       const body = request.body as z.infer<typeof usuarioBodySchema>
-
       const newUsuario: Usuario = {
         ...body,
         id: randomUUID(),
       }
-
+      const responseDB = await postUsuario(newUsuario); 
+      console.log('retorno db DB:', responseDB);
       usuarios.push(newUsuario)
 
       return reply.status(201).send(newUsuario)

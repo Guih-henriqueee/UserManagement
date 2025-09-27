@@ -12,8 +12,10 @@ export const usuarioBodySchema = z.object({
   nivel_permissao_id: z.number().describe('Identificador de Nível de Permissão'),
   cargo_id: z.number().describe('Identificador de Cargo'),
   gerente_id: z.number().describe('Identificador de Gerente'),
-  data_nascimento: z.date().describe('Data de nascimento (YYYY-MM-DD)'),
-  data_adminissao: z.date().describe('Data de admissão (YYYY-MM-DD)'),
+  data_nascimento: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date())
+    .describe("Data de nascimento (YYYY-MM-DD)"),
+  data_admissao: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date())
+    .describe("Data de nascimento (YYYY-MM-DD)"),
   status: z.boolean().describe('Indica se o usuário está ativo'),
   departamento_id: z.number().describe('Identificador de Departamento'),
 })
