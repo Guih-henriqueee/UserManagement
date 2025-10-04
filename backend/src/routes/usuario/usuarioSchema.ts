@@ -1,4 +1,4 @@
-import {z} from '@hono/zod-openapi'
+import { z } from '@hono/zod-openapi'
 import { Usuario } from '../../schema/interfaces'
 
 // "banco" em memória
